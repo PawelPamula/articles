@@ -1,0 +1,247 @@
+\input{physicsheader.tex}
+\input{Qcircuit}
+\usepackage[utf8]{inputenc}
+\usepackage{datetime}
+\usepackage{multicol}
+\usepackage{enumitem}
+
+\newdateformat{mydate}{\monthname[\THEMONTH] \THEDAY, \THEYEAR}
+
+\title{Quantum Teleportation Protocol}
+\author{Paweł Pamuła}
+\date{\mydate\today}
+\begin{document}
+\maketitle
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{abstract}
+A brief description of relatively simple quantum teleportation protocol, which allows transmiting a qubit from one place to another, without physically transferring it through the space.
+\end{abstract}
+\vfill
+\begin{multicols*}{2}
+\section{Qubit}
+\indent
+Qubit is a linear superposition of two arbitralily chosen orthonormal basis vectors. 
+\begin{align*}
+\ket{\psi} = \alpha_0\ket{0} + \alpha_1\ket{1}
+\end{align*}
+Unit vector $\ket{0}$ is $[1, 0]^T$ and $\ket{1}$ is $[0,1]^T$. $\alpha_0$ and $\alpha_1$ denote \textit{probability amplitudes} and they are complex numbers in general. Probability of outcome $\ket{0}$ is $\abs{\alpha_0}^2$ and $\ket{1}$ is $\abs{\alpha_1}^2$. $\ket{\psi}$ is an unit vector from two-dimensional Hilber space $\mathcal{H}$, therefore $\abs{\alpha_0}^2 + \abs{\alpha_1}^2 = 1$. It is consistent with our empirical intuiton - after measurment one obtains a well-defined state $\ket{0}$ or $\ket{1}$ and there is no other possibility.
+
+To measure a state we have to choose an orthonormal basis and probability of the outcome is equal to the square of the length of a projection onto basis vector. After measurement state collapses to the basis vector.
+
+We can perform measurments in arbitralily chosen basis. For instance, \textit{sign basis} is defined as
+\begin{align*}
+\ket{+} = \frac{1}{\sqrt{2}}(\ket{0} + \ket{1})\\
+\ket{-} = \frac{1}{\sqrt{2}}(\ket{0} - \ket{1})
+\end{align*}
+and $\ket{\psi}$ can be easilly rewritten in this basis as
+\begin{align*}
+\ket{\psi} = \frac{\alpha_0 + \alpha_1}{\sqrt{2}}\ket{+}+\frac{\alpha_0-\alpha_1}{\sqrt{2}}\ket{-}
+\end{align*}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Composite systems}
+State of composite system consisting of two qubits is described as a tensor product of two states. Suppose the first qubit is in state $\ket{\psi_1} = \alpha_0\ket{0} + \alpha_1\ket{1}$ and second is $\ket{\psi_2} = \beta_0\ket{0} + \beta_1\ket{1}$. We can interprete composite state $\ket{\psi}$ which is equal to $\ket{\psi_1}\otimes\ket{\psi_2}$ as $\ket{\psi_1\psi_2}$.
+\begin{align}
+\begin{split}
+\label{eq:composite}
+\ket{\psi} &=  (\alpha_0\ket{0} + \alpha_1\ket{1})\otimes(\beta_0\ket{0} + \beta_1\ket{1}) \\
+&=\alpha_0\beta_0\ket{00} + \alpha_0\beta_1\ket{01} + \alpha_1\beta_0\ket{10} + \alpha_1\beta_1\ket{11}
+\end{split}
+\end{align}
+
+Given two independent qubits, we can always obtain state of such composite system. But it is not always possible to obtain tensor product from two-qubit state. Suppose there is state $\ket{\psi} = \frac{1}{\sqrt{2}}\ket{00}+\frac{1}{\sqrt{2}}\ket{11}$. We would like to rewrite as $(\alpha_0\ket{0} + \alpha_1\ket{1})\otimes(\beta_0\ket{0} + \beta_1\ket{1})$. According to \eqref{eq:composite}, $\alpha_0\beta_0 = \frac{1}{\sqrt{2}}$ and $\alpha_1\beta_1 = \frac{1}{\sqrt{2}}$, therefore $\alpha_0, \alpha_1, \beta_0, \beta_1 \neq 0$. On the other hand $\alpha_0\beta_1 = 0$, which obviously is a contradiction - we cannot factorize those kind of states called \textit{entangled states}.
+
+We can perform partial measurment on such composite systems. For example, we can measure only the first qubit  and obtain $\ket{0}$ with probability $P[\ket{0}]$ and $\ket{1}$ with probability $P[\ket{1}]$
+\begin{align*}
+P[\ket{0}] = \abs{\alpha_0\beta_0}^2 + \abs{\alpha_0\beta_1}^2\\
+P[\ket{1}] = \abs{\alpha_1\beta_0}^2 + \abs{\alpha_1\beta_1}^2
+\end{align*}
+After measurment there is a new state.
+\begin{align*}
+\ket{\boldsymbol{0}\psi'} = \frac{1}{\sqrt{ \abs{\alpha_0\beta_0}^2 + \abs{\alpha_0\beta_1}^2}}\left(\alpha_0\beta_0\ket{\boldsymbol{0}0} + \alpha_0\alpha_1\ket{\boldsymbol{0}1}\right)
+\end{align*}
+
+There are four states which represent the simplest examples of entanglement of two qubits called \textit{Bell states}.
+\begin{align*}
+\begin{split}
+\label{eq:bell_states}
+\ket{\psi^+} &=  \frac{1}{\sqrt{2}}(\ket{00}+\ket{11})\\
+\ket{\psi^-} &=  \frac{1}{\sqrt{2}}(\ket{00}-\ket{11})\\
+\ket{\phi^+} &=  \frac{1}{\sqrt{2}}(\ket{01}+\ket{10})\\
+\ket{\phi^-} &=  \frac{1}{\sqrt{2}}(\ket{01}-\ket{10})
+\end{split}
+\end{align*}
+
+Bell states have this interesting property - two qubits that are in entangled state can be spatially separated but they are not subject to relativistic limitations. When someone measures the first qubit there are two possible outcomes. In each case, any subsequent measurement in the same basis will always return the same result with certainity. 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Evolution of  a qubit}
+Evolution of qubit can be described as a rotation of an unit vector in two-dimensional Hilbert space. Transformation can be represented by operators applied to a vector. Those operators are unitary, therefore they preserve the angles between vectors and their lengths. We can think of those transformation as quantum gates. A gate which acts $k$ one qubit is represented by $2^k\times 2^k$ matrix. There are three basic one-qubit gate necessary to describe quantum teleportation protocol.
+\[
+X = 
+\begin{bmatrix}
+0 & 1\\
+1 & 0
+\end{bmatrix}
+Z = 
+\begin{bmatrix}
+1 & 0\\
+0 & -1
+\end{bmatrix}
+H = \frac{1}{\sqrt{2}} 
+\begin{bmatrix}
+1 & 1\\
+1 & -1
+\end{bmatrix}
+\]
+X is equal to a rotation around X-axis by $\pi$ radians.
+\begin{align*}
+X(\alpha_0\ket{0} + \alpha_1\ket{1}) &=
+\begin{bmatrix}
+0 & 1\\
+1 & 0
+\end{bmatrix}
+\cdot
+\begin{bmatrix}
+\alpha_0\\
+\alpha_1
+\end{bmatrix}
+=
+\begin{bmatrix}
+\alpha_0\\
+\alpha_1
+\end{bmatrix} = \\
+&= \alpha_1\ket{0} + \alpha_0\ket{1}
+\end{align*}
+Z is called phase flip and it is equal to a rotation around Z-axis by $\pi$ radians.
+\begin{align*}
+Z(\alpha_0\ket{0} + \alpha_1\ket{1}) &=
+\begin{bmatrix}
+1 & 0\\
+0 & -1
+\end{bmatrix}
+\cdot
+\begin{bmatrix}
+\alpha_0\\
+\alpha_1
+\end{bmatrix}
+=
+\begin{bmatrix}
+\alpha_0\\
+-\alpha_1
+\end{bmatrix} = \\
+&= \alpha_0\ket{0} - \alpha_1\ket{1}
+\end{align*}
+H is called Hadamard gate and it changes the basis from $\{\ket{0},\ket{1}\}$ to $\{\ket{+},\ket{-}\}$ and the other way around. 
+\begin{align*}
+H(\alpha_0\ket{0} + \alpha_1\ket{1}) &= \frac{1}{\sqrt{2}}
+\begin{bmatrix}
+1 & 1\\
+1 & -1
+\end{bmatrix}
+\cdot
+\begin{bmatrix}
+\alpha_0\\
+\alpha_1
+\end{bmatrix}\\
+&= \frac{1}{\sqrt{2}}
+\begin{bmatrix}
+\alpha_0+\alpha_1\\
+\alpha_0-\alpha_1
+\end{bmatrix} = \\
+&= \frac{\alpha_0+\alpha_1}{\sqrt{2}}\ket{0} - \frac{\alpha_0-\alpha_1}{\sqrt{2}}\ket{1} 
+\end{align*}
+One application of the Hadamard gate to either a 0 or 1 qubit will produce a quantum state that, if observed, will be a 0 or 1 with equal probability.
+
+There are gates acting or two cubits, where one of them act as a control for operation. One of them example is CNOT (controlled NOT) gate. 
+\begin{align*}
+CNOT = 
+\begin{bmatrix}
+1 & 0 & 0 & 0\\
+0 & 1 & 0 & 0\\
+0 & 0 & 0 & 1\\
+0 & 0 & 1 & 0
+\end{bmatrix}
+\end{align*}
+\begin{align*}
+\Qcircuit @C=1em @R=1em {
+\lstick{a} & \ctrl{1} & \rstick{a} \qw \\
+\lstick{b} & \targ & \rstick{a\oplus b} \qw
+}
+\end{align*}
+This particular CNOT gate takes the first bit as a control bit and if it is equal to 1 it flips the second one. 
+
+We can combine those gates in more complicated circuits. Let's consider circuit involving Hadamard and CNOT gate and input state $\ket{00}$
+\begin{align*}
+\Qcircuit @C=1em @R=1em {
+\lstick{\ket{0}} & \gate{H} & \qw & \ctrl{1} & \qw\\
+\lstick{\ket{0}} & \qw & \qw & \targ & \qw
+}
+\end{align*}
+It maps the first bit to $\ket{+}$ and performs control not using first bit as control. 
+\begin{align*}
+\ket{00}\longrightarrow\underbrace{\frac{1}{\sqrt{2}}(\ket{0} + \ket{1})}_{\ket{+}}\ket{0} = \frac{1}{\sqrt{2}}(\ket{00}+\ket{11})
+\end{align*}
+The result is a previously mentioned Bell state. by varying the input we can obtain other three Bell states, which proves, that using basic quantum gates we are able to produce entangled states.
+
+\section{No-cloning theorem}
+Suppose our task is to construc a quantum circuit that accepts 2 qubits at the input - one is unknown superposition of 2 states ($\alpha_0$ and $\alpha_1$ are unknown, obtained as a result of an experiment for instance) and $\ket{s}$ is a well-known state, such as $\ket{0}$. 
+
+\begin{align*}
+\Qcircuit @C=1em @R=1em {
+\lstick{\ket{\psi}} & \multigate{1}{U} & \rstick{\ket{\psi}} \qw \\
+\lstick{\ket{s}} & \ghost{U} & \rstick{\ket{\psi}} \qw
+}
+\end{align*}
+
+When $\ket{\psi}= \alpha_0\ket{0}+\alpha_1\ket{1}$, by linearity of unitary operator $U$ we obtain:
+\begin{align*}
+U[(\alpha_0\ket{0}+\alpha_1\ket{1})\ket{s}] = \alpha_0\underbrace{U\ket{0}\ket{s}}_{\ket{00}} + \alpha_1 \underbrace{U\ket{1}\ket{s}}_{\ket{11}}
+\end{align*}
+$U$ is construct in a such way, that $U\ket{\psi}\ket{s} = \ket{\psi}\ket{\psi}$. On the other hand output is a tensor product of two states $\ket{\psi}$.
+\begin{align*}
+\ket{\psi\psi} &= (\alpha_0\ket{0}+\alpha_1\ket{1})\otimes(\alpha_0\ket{0}+\alpha_1\ket{1})\\
+&= \alpha_0^2\ket{00}+\alpha_0\alpha_1\ket{01}+\alpha_1\alpha_0\ket{10}+\alpha_1^2\ket{11}
+\end{align*}
+which obviously is a contradiction. We conclude, that there is no such quantum circuit, that can clone an unknown quantum state.
+
+\section{Quantum teleportation}
+Quantum teleportation protocol is based on basic one and two-qubit gates. Prerequisites for this protocol are an unknown qubit, entangled state shared between sender and receiver and a set of quantum gates. Assume Alice (sender) has an uknown qubit - coefficients $\alpha_0, \alpha_1$ are unknown. She would like Bob to have this state, for example to continue an experiment using some devices located in another place. 
+
+\begin{align*}
+\Qcircuit @C=1em @R=2em {
+\lstick{\ket{\psi}} & & \ctrl{1} & \qw & \qw & \gate{H} & \meter & \control\cw & & \\
+\lstick{\ket{\phi_A}} & & \targ & \meter & \control\cw & & & \cwx &\\ 
+\lstick{\ket{\phi_B}} & & \qw & \qw & \gate{H}\cwx &\qw & \qw & \gate{Z}\cwx\qw & \rstick{\ket{\psi}}\qw
+\gategroup{1}{3}{2}{4}{1.6em}{.}
+\gategroup{1}{6}{3}{8}{.6em}{.}
+}
+\end{align*}
+
+ Let's consider first group of gates. Alice has\\ $\ket{\psi} = \alpha_0\ket{0} + \alpha_1\ket{1}$ and one of two qubits $\ket{\phi_A}$ in entagled state.
+\begin{enumerate}[leftmargin=0cm,itemindent=.5cm,labelwidth=\itemindent,labelsep=0cm,align=left]
+\item[1)]In the first step, Alice performs CNOT operation with first bit as a control bit and second one as a result bit.
+\begin{align*}
+CNOT\ket{\psi}\ket{\phi_A} &= \frac{\alpha_0}{\sqrt{2}}(\ket{000} + \ket{011}) + \frac{\alpha_1}{\sqrt{2}}(\ket{100}+\ket{111})
+\end{align*}
+Following result:
+\begin{align*}
+\ket{\psi}\ket{\phi_A} &= \frac{\alpha_0}{\sqrt{2}}(\ket{000} + \ket{011}) + \frac{\alpha_1}{\sqrt{2}}(\ket{110}+\ket{101})
+\end{align*}
+
+\item[2)] Alice measures the second bit in the composite system. There are two possible results
+\begin{align*}
+0\longrightarrow(\alpha_0\ket{00}+\alpha_1\ket{11})\\
+1\longrightarrow(\alpha_0\ket{01}+\alpha_1\ket{10})
+\end{align*}
+In the second case Alice contacts Bob through classical medium and tells him to apply bit flip (X) gate.
+\item[3)] Alice applies Hadamard gate to the first bit in the composite system.
+\begin{align*}
+&\frac{\alpha_0}{\sqrt{2}}(\ket{+}+\ket{-})\ket{0}+\frac{\alpha_1}{\sqrt{2}}(\ket{+}-\ket{-})\ket{1} = \\
+&\frac{1}{\sqrt{2}}\ket{+}(\alpha_0\ket{0}+\alpha_1\ket{1})+\frac{1}{\sqrt{2}}\ket{-}(\alpha_0\ket{0}-\alpha_1\ket{1})
+\end{align*}
+\item[4)] Alice performs measurement in sign basis. If the results is $\ket{+}$ entangled state is set to initial $\ket{\psi}$. In other case she contacts Bob, who should apply phase flip (Z) gate. It turns out that Bob has initial unknown state $\ket{\psi}$.
+\end{enumerate}
+\section{Summary}
+First of all, this protocol does not violate no-cloning theorem, because Alice measures both her bits and after measurment they are destroyed. Information also does not violate theory of relativity, because Bob has to receive message via classical medium how to apply X and Z gate. As the result Bob receives initial unknown states $\ket{\psi}$.
+\end{multicols*}
+\end{document}
